@@ -1,0 +1,163 @@
+NOTE: this version currently only contains the raw, type-generic implementation
+macros for unsigned and signed integral types. The algorithm/representation of
+bytepacks for those types are likely to stay stable, but I still have other
+implementations that I want to make (for other C data types, and for an actual
+proper API - the underlying template-like macros are a less "stable" API than
+actual functions utilizing them will be). Also, the documentation has room to
+improve.
+
+
+-= bytepack =-
+
+A small C library for packing values of certain C types into the fewest bytes
+possible, while striving to remain performant and very carefully comformant to
+the C standard.
+
+
+-= What do you mean, "packing"? =-
+
+bytepack stores only as many bits of the original value as are needed to
+unambiguously express the value, with an effort to minimize the overhead needed
+to support the resultant variable length of bytepack values: so for example
+when you bytepack an unsigned int, values 0-127 take one byte, values 128-16511
+take two bytes, etc. See the Algorithm/Representation section if you're curious
+about the details.
+
+For the pedantic C language-lawyer types (I say that without judgement, as I am
+one as well), bytepack has been coded with C's "byte" == "char" != octet (8
+bits) technicalities in mind. See footnote [1].
+
+
+-= Why? =-
+
+bytepack is good when your memory usage is your limit/problem, and you can
+afford to take a few more CPU cycles to pack and unpack the values (though
+bytepack does strive to take as little CPU cycles as it can).
+
+For example, lets say you need to store a lot of numbers in memory, most of
+which will have small values, but a very few of which will be much larger. A
+"long long" gives you the full data range you need, but you don't want to use
+8 bytes when you know the vast majority of those numbers will be in the low
+thousands, with the million and billion measurements being outliers: A bytepack
+of a "long long" in such a case will take just one-two bytes the majority of
+the time. You do lose O(1) indexing into an array of them, of course, as with
+for example UTF-8, but if the goal is to save memory, that might be acceptable,
+and if it means the difference between fitting in one cache line or not,
+overall performance may actually improve.
+
+
+-= What bytepack is not =-
+
+bytepack is not a fancy compression algorithm, it's a simple tradeoff: you save
+the most bytes when bytepacking small values. As the values go up, you save
+less bytes, and at the highest values of a given type, you actually use more
+bytes vs the base type. (This is the same tradeoff that lets UTF-8 fit ASCII
+characters into one byte, many commonly used international characters into two
+bytes, etc.)
+
+bytepack is also not inherently intended for data interchange between machines.
+Its coded to make the best use of your system's C data types: this means that
+on the one hand, it might actually produce more portable data representations
+than some naive approaches (e.g. I'd feel safer writing a bytepack of an int to
+a file or network socket rather than an int itself). But on the other hand,
+it's still subject to how the "flexibility" of C's standard makes for
+portability/interchange problems (e.g. if you're coding for a DSP where
+CHAR_BIT == 16, your bytepacks will be different than on a Linux system where
+CHAR_BIT == 8, for the same packed original value). But the code shouldn't be
+too hard to adapt or use in a way that makes it portable.
+
+
+-= Algorithm/Representation =-
+
+The explanations in this section are given assuming "typical" sizes for types,
+but actual code doesn't depend on those assumptions: see footnote[1].
+
+On a "normal" (CHAR_BIT == 8) system, the maximum unsigned value that fits in
+an unsigned char is 255. bytepacks "use" one of those bits as a "continue" bit,
+we can only fit 7 bits worth of data in one byte. So: 127.
+
+Now, an unsigned short (on a "normal" system, 16 bits wide), has the maximum
+value of 65535. But we use two bits (one on each byte) as a continue bit, so
+it's actually 14 bits available, making the maximum value 16383. My first
+bytepack algorithm stopped there - the continue bit just told the bytepack to
+continue onto the next byte, but had no impact on the value: packing would
+write the first 7 bits, check if there was more value to add (by bitshifting
+the value down by 7 bits and seeing if the remaining value became zero (all
+value bits were shifted out)), set the continue bit if so, and loop.
+
+But then I realized we can actually squeeze a little more value range out of
+the continue bit: whenever the value bit is set, we _know_ the value of that
+byte was bigger than the 0-127 that could've fit in that one byte before we had
+to "spill" to the next byte. Therefore, any time we have to set the continue
+bit, we can actually subtract the least significant bit out of the bits left to
+pack. (In other words, we can subtract 128 from the remaining value before the
+bit-shift, or bit shift first and then subtract 1.)
+
+It might take a bit of thinking to realize the exact benefits of this (I first
+intuited that this would be better, but only after some careful thought could I
+understand exactly what the benefits were): basically, we get an extra 128
+possible representations per byte, and unpacking can actually be done faster,
+because now the continue bit of each byte doesn't have to be masked out when
+the byte is shifted and added into the output variable: the next shifted byte
+had its bottom bit subtracted from itself, so when its shifted back into its
+place and added, the previous bytes continue bit undoes that change inline with
+the addition itself.
+
+Here's an example to maybe help illustrate how this works:
+
+In the "non-overloaded" continue bit useage, packing 0xFF looks like this:
+The bottom 7 bits, 0x7F, go into the first byte, then we set the continue bit,
+so the first byte is 0xFF, but we still have the highest bit of the original
+value to pack, so we spill into the next byte, with the first remaining bit
+being the least significant bit of the new byte, which ends up being 0x01.
+
+So 0x7f and below pack as themselves, 0xff packs as 0x01ff, 0x80 packs as
+0x0100, etc. Did you notice/realize what packs as 0x00ff? Nothing. The continue
+bit in this approach just says "the rest of the value is in one or more chunks
+(bytes minus the continue bit) after this one". Therefore, a byte of 0x00 after
+a byte with the continue bit set is a redundant representation of whatever the
+bytes before that already represented. In fact, 0x00808080 ends up being a very
+space inefficient way to pack a 0!
+
+But with the "overloaded"/"subtracting" continue bit, 0xff packs like this: The
+bottom 0x7f bits go in the first byte and the continue bit is set, but now,
+when we take the remaining value starting from the first unpacked bit (0x01),
+we subtract one from it before continuing the packing: it becomes 0x00. Thus,
+0x7f and below still pack as themselves, but 0xFF now packs as 0x00FF and 0x80
+packs as 0x0080. So instead of 0x3fff packing into 0x7fff and thus being the
+last value packable into two bytes, 0x3fff now packs into 0x7eff: and we have
+128 more values we can still pack into two bytes. The continue bit says
+"the rest of the value is what the rest of the bytes contain, PLUS 1". (Each
+continue bit says this about the total value left to unpack after it, so the
+gain is cumulative). And 0x00808080 is now the packing of 0x204080, and not a
+wasted representation!
+
+
+-= Footnotes =-
+
+[1] Technically, a "byte" is the smallest addressable unit of memory, and in C,
+a "byte" is whatever the character types are: on all common systems that's an
+octet (eight bits) like you'd expect. On some less common systems a char is
+bigger, which is allowed by the C standard.
+
+Why use a char type at all? Well, since the C standard is very flexible about
+the underlying bits of each type, and the C99 fixed width integer types are
+optional to C implementations, the only truly portable way to do bitwise
+manipulations of data is to access it as unsigned char data (C99 and above at
+least, C89 is not clear about this, but it seems C99 standardized this because
+it was common C usage to do this, suggesting most if not all older systems were
+the same way).
+
+At any rate, bytepack is coded with the CHAR_BITS >= 8 nature of C character
+types in mind, so rest assured: no char bits will go wasted in a bytepack: it
+uses the highest bits of the unsigned char type for any metadata that it needs,
+then it uses the rest of the unsigned char bits for the value bits of the data
+being packed: so if you're on a DSP with 16-bit chars, unsigned integral types
+holding values 0-32767 will be packable within one unsigned char.
+
+
+[2] A more specific (micro?-)optimization usecase where "bytepack" is used can
+be seen in my tool "vee" ( https://github.com/mentalisttraceur/vee ), where a
+slightly specialized variation of (older, conceptually simpler but slightly
+less efficient) bytepack code is used to let the tool avoid allocating any
+extra memory at all, by recycling the argv strings' memory).
