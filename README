@@ -64,7 +64,8 @@ it's still subject to how the "flexibility" of C's standard makes for
 portability/interchange problems (e.g. if you're coding for a DSP where
 CHAR_BIT == 16, your bytepacks will be different than on a Linux system where
 CHAR_BIT == 8, for the same packed original value). But the code shouldn't be
-too hard to adapt or use in a way that makes it portable.
+too hard to adapt or use in a way that makes it output bytepacks which are
+suitable for interchange.
 
 
 -= Algorithm/Representation =-
@@ -96,12 +97,12 @@ bit-shift, or bit shift first and then subtract 1.)
 It might take a bit of thinking to realize the exact benefits of this (I first
 intuited that this would be better, but only after some careful thought could I
 understand exactly what the benefits were): basically, we get an extra 128
-possible representations per byte, and unpacking can actually be done faster,
-because now the continue bit of each byte doesn't have to be masked out when
-the byte is shifted and added into the output variable: the next shifted byte
-had its bottom bit subtracted from itself, so when its shifted back into its
-place and added, the previous bytes continue bit undoes that change inline with
-the addition itself.
+possible representations for each byte after the first one, and unpacking can
+actually be done faster, because now the continue bit of each byte doesn't have
+to be masked out when the byte is shifted and added into the output variable:
+the next shifted byte had its bottom bit subtracted from itself, so when its
+shifted back into its place and added, the previous bytes continue bit undoes
+that change inline with the addition itself.
 
 Here's an example to maybe help illustrate how this works:
 
