@@ -49,7 +49,7 @@ Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
 Insertable Code (must be actual C code snippets):
  loopBodyEnd_c:
-  Goes at the end of a body of the internal do-while loop. Intended for resume
+  Goes at the end of a body of the internal pack loop. Intended for resume
   support, size/bounds checking, and writing/counting the byteback bytes.
 \*/
 #define bytepack_uGeneric_m(val, loopBodyEnd_c) \
@@ -80,7 +80,7 @@ Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
  loopBodyStart_c:
-  Goes at the start of a body of the internal for loop. Intended for resume
+  Goes at the start of a body of the internal unpack loop. Intended for resume
   support, size/bounds checking, and reading/counting the byteback bytes.
 \*/
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
@@ -109,7 +109,7 @@ Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
 Insertable Code (must be actual C code snippets):
  loopBodyEnd_c:
-  Goes at the end of a body of the internal do-while loop. Intended for resume
+  Goes at the end of a body of the internal pack loop. Intended for resume
   support, size/bounds checking, and writing/counting the byteback bytes.
 \*/
 #define bytepack_sGeneric_m(val, loopBodyEnd_c) \
@@ -172,7 +172,7 @@ Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
  loopBodyStart_c:
-  Goes at the start of a body of the internal for loop. Intended for resume
+  Goes at the start of a body of the internal unpack loop. Intended for resume
   support, size/bounds checking, and reading/counting the byteback bytes.
 \*/
 #define byteback_sGeneric_m(val, T, loopBodyStart_c) \
