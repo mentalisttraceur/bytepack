@@ -47,7 +47,7 @@ Assumes (violating these could be anything from harmless to catostrophic):
  typeof(val) is an integral type
 Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
-Code Snippet Arguments (must be actual C code snippets):
+Insertable Code (must be actual C code snippets):
  loopBodyEnd_c:
   Goes at the end of a body of the internal do-while loop. Intended for resume
   support, size/bounds checking, and writing/counting the byteback bytes.
@@ -102,7 +102,7 @@ Assumes (violating these could be anything from harmless to catostrophic):
  typeof(val) is an integral type
 Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
-Code Snippet Arguments (must be actual C code snippets):
+Insertable Code (must be actual C code snippets):
  loopBodyEnd_c:
   Goes at the end of a body of the internal do-while loop. Intended for resume
   support, size/bounds checking, and writing/counting the byteback bytes.
