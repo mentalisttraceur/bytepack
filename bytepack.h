@@ -84,17 +84,22 @@ Insertable Code (must be actual C code snippets):
   support, size/bounds checking, and reading/counting the byteback bytes.
 \*/
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
-for \
-( \
- unsigned char byteback_uGeneric_m_continueBit = UCHAR_MASK_NTH_TOP_BIT_m(1), \
-  byteback_uGeneric_m_byte, byteback_uGeneric_m_shift = 0; \
- byteback_uGeneric_m_continueBit; \
- byteback_uGeneric_m_shift += CHAR_BIT - 1 \
-) \
 { \
- loopBodyStart_c \
- byteback_uGeneric_m_continueBit &= byteback_uGeneric_m_byte; \
- val += (T )(byteback_uGeneric_m_byte << byteback_uGeneric_m_shift); \
+ unsigned char byteback_uGeneric_m_continueBit; \
+ unsigned char byteback_uGeneric_m_shift; \
+ unsigned char byteback_uGeneric_m_byte; \
+ for \
+ ( \
+  byteback_uGeneric_m_continueBit = UCHAR_MASK_NTH_TOP_BIT_m(1), \
+   byteback_uGeneric_m_shift = 0; \
+  byteback_uGeneric_m_continueBit; \
+  byteback_uGeneric_m_shift += CHAR_BIT - 1 \
+ ) \
+ { \
+  loopBodyStart_c \
+  byteback_uGeneric_m_continueBit &= byteback_uGeneric_m_byte; \
+  val += (T )(byteback_uGeneric_m_byte << byteback_uGeneric_m_shift); \
+ } \
 }
 
 /*\
