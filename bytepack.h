@@ -29,10 +29,9 @@
 /* Declarations and explanations *********************************************/
 /* When in doubt, assume this code does not error-check your arguments. */
 
-#define UCHAR_LOW_N_BITS_m(n) (unsigned char )(UCHAR_MAX >> (CHAR_BIT - (n)))
+#define UCHAR_MASK_NOT_TOP_N_BITS_m(n) (unsigned char )(UCHAR_MAX >> (n))
 /*\
-All but the n most significant bit of an unsigned char.
-Triggers C undefined behavior if n > CHAR_BIT.
+All but the n most significant bits of an unsigned char.
 \*/
 
 #define UCHAR_NTH_BIT_m(n) (unsigned char )(1 << (n - 1))
@@ -124,7 +123,7 @@ do \
   bytepack_sGeneric_m_signBit = 0; \
  } \
  unsigned char bytepack_sGeneric_m_byte = val; \
- bytepack_sGeneric_m_byte &= UCHAR_LOW_N_BITS_m(CHAR_BIT - 2); \
+ bytepack_sGeneric_m_byte &= UCHAR_MASK_NOT_TOP_N_BITS_m(2); \
  val >>= CHAR_BIT - 2; \
  if(bytepack_sGeneric_m_signBit) \
  { \
@@ -182,7 +181,7 @@ do \
  = byteback_sGeneric_m_byte & UCHAR_NTH_BIT_m(CHAR_BIT); \
  unsigned char byteback_sGeneric_m_signBit \
  = byteback_sGeneric_m_byte & UCHAR_NTH_BIT_m(CHAR_BIT - 1); \
- byteback_sGeneric_m_byte &= UCHAR_LOW_N_BITS_m(CHAR_BIT - 2); \
+ byteback_sGeneric_m_byte &= UCHAR_MASK_NOT_TOP_N_BITS_m(2); \
  if(byteback_sGeneric_m_continueBit) \
  { \
   byteback_sGeneric_m_byte |= UCHAR_NTH_BIT_m(CHAR_BIT - 1); \
