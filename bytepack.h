@@ -34,10 +34,9 @@
 All but the n most significant bits of an unsigned char.
 \*/
 
-#define UCHAR_NTH_BIT_m(n) (unsigned char )(1 << (n - 1))
+#define UCHAR_MASK_TOP_NTH_BIT_m(n) (unsigned char )(1 << (CHAR_BIT - (n)))
 /*\
-The nth (1-indexed) bit of an unsigned char.
-Triggers C undefined behavior if n < 1.
+The nth most significant bit of an unsigned char.
 \*/
 
 /* Macro definitions *********************************************************/
@@ -61,7 +60,7 @@ do \
  if(val) \
  { \
   val -= 1; \
-  bytepack_uGeneric_m_byte |= UCHAR_NTH_BIT_m(CHAR_BIT); \
+  bytepack_uGeneric_m_byte |= UCHAR_MASK_TOP_NTH_BIT_m(1); \
  } \
  loopBodyEnd_c \
 } \
@@ -87,7 +86,7 @@ Insertable Code (must be actual C code snippets):
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
 for \
 ( \
- unsigned char byteback_uGeneric_m_continueBit = UCHAR_NTH_BIT_m(CHAR_BIT), \
+ unsigned char byteback_uGeneric_m_continueBit = UCHAR_MASK_TOP_NTH_BIT_m(1), \
   byteback_uGeneric_m_byte, byteback_uGeneric_m_shift = 0; \
  byteback_uGeneric_m_continueBit; \
  byteback_uGeneric_m_shift += CHAR_BIT - 1 \
@@ -114,7 +113,7 @@ do \
  unsigned char bytepack_sGeneric_m_signBit; \
  if(val < 0) \
  { \
-  bytepack_sGeneric_m_signBit = UCHAR_NTH_BIT_m(CHAR_BIT - 1); \
+  bytepack_sGeneric_m_signBit = UCHAR_MASK_TOP_NTH_BIT_m(2); \
   val += 1; \
   val = -val; \
  } \
@@ -146,7 +145,7 @@ do \
   if(val) \
   { \
    val -= 1; \
-   bytepack_sGeneric_m_byte |= UCHAR_NTH_BIT_m(CHAR_BIT); \
+   bytepack_sGeneric_m_byte |= UCHAR_MASK_TOP_NTH_BIT_m(1); \
   } \
   loopBodyEnd_c \
  } \
@@ -178,13 +177,13 @@ do \
  loopBodyStart_c \
  unsigned char byteback_sGeneric_m_shift = 0; \
  unsigned char byteback_sGeneric_m_continueBit \
- = byteback_sGeneric_m_byte & UCHAR_NTH_BIT_m(CHAR_BIT); \
+ = byteback_sGeneric_m_byte & UCHAR_MASK_TOP_NTH_BIT_m(1); \
  unsigned char byteback_sGeneric_m_signBit \
- = byteback_sGeneric_m_byte & UCHAR_NTH_BIT_m(CHAR_BIT - 1); \
+ = byteback_sGeneric_m_byte & UCHAR_MASK_TOP_NTH_BIT_m(2); \
  byteback_sGeneric_m_byte &= UCHAR_MASK_NOT_TOP_N_BITS_m(2); \
  if(byteback_sGeneric_m_continueBit) \
  { \
-  byteback_sGeneric_m_byte |= UCHAR_NTH_BIT_m(CHAR_BIT - 1); \
+  byteback_sGeneric_m_byte |= UCHAR_MASK_TOP_NTH_BIT_m(2); \
  } \
  if(byteback_sGeneric_m_signBit) \
  { \
