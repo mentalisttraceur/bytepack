@@ -113,7 +113,6 @@ Insertable Code (must be actual C code snippets):
   support, size/bounds checking, and writing/counting the byteback bytes.
 \*/
 #define bytepack_sGeneric_m(val, loopBodyEnd_c) \
-do \
 { \
  unsigned char bytepack_sGeneric_m_signBit; \
  if(val < 0) \
@@ -155,8 +154,7 @@ do \
   loopBodyEnd_c \
  } \
  while(val); \
-} \
-while(0);
+}
 
 /*\
 Assumes (violating these could be anything from harmless to catostrophic):
