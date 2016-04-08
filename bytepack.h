@@ -86,7 +86,7 @@ Insertable Code (must be actual C code snippets):
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
 { \
  unsigned char byteback_uGeneric_m_continueBit = UCHAR_MASK_NTH_TOP_BIT_m(1); \
- unsigned char byteback_uGeneric_m_shift = 0; \
+ unsigned int byteback_uGeneric_m_shift = 0; \
  unsigned char byteback_uGeneric_m_byte; \
  do \
  { \
@@ -180,7 +180,7 @@ do \
 { \
  unsigned char byteback_sGeneric_m_byte; \
  loopBodyStart_c \
- unsigned char byteback_sGeneric_m_shift = 0; \
+ unsigned int byteback_sGeneric_m_shift = 0; \
  unsigned char byteback_sGeneric_m_continueBit \
  = byteback_sGeneric_m_byte & UCHAR_MASK_NTH_TOP_BIT_m(1); \
  unsigned char byteback_sGeneric_m_signBit \
