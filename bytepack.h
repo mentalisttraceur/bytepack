@@ -115,6 +115,7 @@ Insertable Code (must be actual C code snippets):
 #define bytepack_sGeneric_m(val, loopBodyEnd_c) \
 { \
  unsigned char bytepack_sGeneric_m_signBit; \
+ unsigned char bytepack_sGeneric_m_byte; \
  if(val < 0) \
  { \
   bytepack_sGeneric_m_signBit = UCHAR_MASK_NTH_TOP_BIT_m(2); \
@@ -125,8 +126,7 @@ Insertable Code (must be actual C code snippets):
  { \
   bytepack_sGeneric_m_signBit = 0; \
  } \
- unsigned char bytepack_sGeneric_m_byte = val; \
- bytepack_sGeneric_m_byte &= UCHAR_MASK_NOT_N_TOP_BITS_m(2); \
+ bytepack_sGeneric_m_byte = val & UCHAR_MASK_NOT_N_TOP_BITS_m(2); \
  val >>= CHAR_BIT - 2; \
  if(bytepack_sGeneric_m_signBit) \
  { \
@@ -177,11 +177,14 @@ Insertable Code (must be actual C code snippets):
 do \
 { \
  unsigned char byteback_sGeneric_m_byte; \
+ unsigned int byteback_sGeneric_m_shift; \
+ unsigned char byteback_sGeneric_m_continueBit; \
+ unsigned char byteback_sGeneric_m_signBit; \
  loopBodyStart_c \
- unsigned int byteback_sGeneric_m_shift = 0; \
- unsigned char byteback_sGeneric_m_continueBit \
+ byteback_sGeneric_m_shift = 0; \
+ byteback_sGeneric_m_continueBit \
  = byteback_sGeneric_m_byte & UCHAR_MASK_NTH_TOP_BIT_m(1); \
- unsigned char byteback_sGeneric_m_signBit \
+ byteback_sGeneric_m_signBit \
  = byteback_sGeneric_m_byte & UCHAR_MASK_NTH_TOP_BIT_m(2); \
  byteback_sGeneric_m_byte &= UCHAR_MASK_NOT_N_TOP_BITS_m(2); \
  if(byteback_sGeneric_m_continueBit) \
