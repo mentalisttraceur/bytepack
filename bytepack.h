@@ -181,7 +181,6 @@ do \
  unsigned char byteback_sGeneric_m_continueBit; \
  unsigned char byteback_sGeneric_m_signBit; \
  loopBodyStart_c \
- byteback_sGeneric_m_shift = 0; \
  byteback_sGeneric_m_continueBit \
  = byteback_sGeneric_m_byte & UCHAR_NTH_TOP_BIT_m(1); \
  byteback_sGeneric_m_signBit \
