@@ -128,18 +128,7 @@ Insertable Code (must be actual C code snippets):
  } \
  bytepack_sGeneric_m_byte = val & UCHAR_NOT_N_TOP_BITS_m(2); \
  val >>= CHAR_BIT - 2; \
- if(bytepack_sGeneric_m_signBit) \
- { \
-  bytepack_sGeneric_m_byte += 1; \
-  if(bytepack_sGeneric_m_signBit & bytepack_sGeneric_m_byte) \
-  { \
-   val += 1; \
-  } \
-  else \
-  { \
-   bytepack_sGeneric_m_byte |= bytepack_sGeneric_m_signBit; \
-  } \
- } \
+ bytepack_sGeneric_m_byte |= bytepack_sGeneric_m_signBit; \
  goto bytepack_sGeneric_m_loopSkipReInit; \
  do \
  { \
@@ -192,6 +181,7 @@ do \
  } \
  if(byteback_sGeneric_m_signBit) \
  { \
+  val -= 1; \
   val -= byteback_sGeneric_m_byte; \
  } \
  else \
