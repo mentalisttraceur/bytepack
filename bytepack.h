@@ -92,7 +92,7 @@ Insertable Code (must be actual C code snippets):
  { \
   loopBodyStart_c \
   byteback_uGeneric_m_continueBit &= byteback_uGeneric_m_byte; \
-  val += (T )(byteback_uGeneric_m_byte << byteback_uGeneric_m_shift); \
+  val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
   if(!byteback_uGeneric_m_continueBit) \
   { \
    break; \
@@ -195,11 +195,11 @@ do \
   byteback_sGeneric_m_continueBit &= byteback_sGeneric_m_byte; \
   if(byteback_sGeneric_m_signBit) \
   { \
-   val -= (T )(byteback_sGeneric_m_byte << byteback_sGeneric_m_shift); \
+   val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
   } \
   else \
   { \
-   val += (T )(byteback_sGeneric_m_byte << byteback_sGeneric_m_shift); \
+   val += (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
   } \
   byteback_sGeneric_m_shift += CHAR_BIT - 1; \
  } \
