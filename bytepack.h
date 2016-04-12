@@ -87,7 +87,7 @@ Insertable Code (must be actual C code snippets):
 { \
  unsigned int byteback_uGeneric_m_shift = 0; \
  unsigned char byteback_uGeneric_m_byte; \
- do \
+ while(1) \
  { \
   loopBodyStart_c \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
@@ -97,7 +97,6 @@ Insertable Code (must be actual C code snippets):
   } \
   byteback_uGeneric_m_shift += CHAR_BIT - 1; \
  } \
- while(1); \
 }
 
 /*\
