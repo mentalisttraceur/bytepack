@@ -91,9 +91,8 @@ Insertable Code (must be actual C code snippets):
  do \
  { \
   loopBodyStart_c \
-  byteback_uGeneric_m_continueBit &= byteback_uGeneric_m_byte; \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
-  if(!byteback_uGeneric_m_continueBit) \
+  if(!(byteback_uGeneric_m_continueBit & byteback_uGeneric_m_byte)) \
   { \
    break; \
   } \
