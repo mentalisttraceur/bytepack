@@ -85,14 +85,13 @@ Insertable Code (must be actual C code snippets):
 \*/
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
 { \
- unsigned char byteback_uGeneric_m_continueBit = UCHAR_NTH_TOP_BIT_m(1); \
  unsigned int byteback_uGeneric_m_shift = 0; \
  unsigned char byteback_uGeneric_m_byte; \
  do \
  { \
   loopBodyStart_c \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
-  if(!(byteback_uGeneric_m_continueBit & byteback_uGeneric_m_byte)) \
+  if(!(UCHAR_NTH_TOP_BIT_m(1) & byteback_uGeneric_m_byte)) \
   { \
    break; \
   } \
