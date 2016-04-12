@@ -85,8 +85,8 @@ Insertable Code (must be actual C code snippets):
 \*/
 #define byteback_uGeneric_m(val, T, loopBodyStart_c) \
 { \
- unsigned int byteback_uGeneric_m_shift = 0; \
  unsigned char byteback_uGeneric_m_byte; \
+ unsigned int byteback_uGeneric_m_shift = 0; \
  while(1) \
  { \
   loopBodyStart_c \
@@ -111,8 +111,8 @@ Insertable Code (must be actual C code snippets):
 \*/
 #define bytepack_sGeneric_m(val, loopBodyEnd_c) \
 { \
- unsigned char bytepack_sGeneric_m_signBit; \
  unsigned char bytepack_sGeneric_m_byte; \
+ unsigned char bytepack_sGeneric_m_signBit; \
  if(val < 0) \
  { \
   bytepack_sGeneric_m_signBit = UCHAR_NTH_TOP_BIT_m(2); \
