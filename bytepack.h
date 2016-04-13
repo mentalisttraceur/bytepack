@@ -164,32 +164,32 @@ do \
 { \
  unsigned char byteback_sGeneric_m_byte; \
  unsigned int byteback_sGeneric_m_shift; \
- unsigned char byteback_sGeneric_m_continueBit; \
  unsigned char byteback_sGeneric_m_signBit; \
  loopBodyStart_c \
- byteback_sGeneric_m_continueBit \
- = byteback_sGeneric_m_byte & UCHAR_NTH_TOP_BIT_m(1); \
- byteback_sGeneric_m_signBit \
- = byteback_sGeneric_m_byte & UCHAR_NTH_TOP_BIT_m(2); \
- byteback_sGeneric_m_byte &= UCHAR_NOT_N_TOP_BITS_m(2); \
- if(byteback_sGeneric_m_continueBit) \
  { \
-  byteback_sGeneric_m_byte |= UCHAR_NTH_TOP_BIT_m(2); \
+  unsigned char byteback_sGeneric_m_firstByte \
+  = byteback_sGeneric_m_byte & UCHAR_NOT_N_TOP_BITS_m(2); \
+  if(UCHAR_NTH_TOP_BIT_m(1) & byteback_sGeneric_m_byte) \
+  { \
+   byteback_sGeneric_m_firstByte |= UCHAR_NTH_TOP_BIT_m(2); \
+  } \
+  byteback_sGeneric_m_signBit \
+  = byteback_sGeneric_m_byte & UCHAR_NTH_TOP_BIT_m(2); \
+  if(byteback_sGeneric_m_signBit) \
+  { \
+   val -= 1; \
+   val -= byteback_sGeneric_m_firstByte; \
+  } \
+  else \
+  { \
+   val += byteback_sGeneric_m_firstByte; \
+  } \
  } \
- if(byteback_sGeneric_m_signBit) \
+ byteback_sGeneric_m_shift = -1; \
+ while(UCHAR_NTH_TOP_BIT_m(1) & byteback_sGeneric_m_byte) \
  { \
-  val -= 1; \
-  val -= byteback_sGeneric_m_byte; \
- } \
- else \
- { \
-  val += byteback_sGeneric_m_byte; \
- } \
- byteback_sGeneric_m_shift = CHAR_BIT - 2; \
- while(byteback_sGeneric_m_continueBit) \
- { \
+  byteback_sGeneric_m_shift += CHAR_BIT - 1; \
   loopBodyStart_c \
-  byteback_sGeneric_m_continueBit &= byteback_sGeneric_m_byte; \
   if(byteback_sGeneric_m_signBit) \
   { \
    val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
@@ -198,7 +198,6 @@ do \
   { \
    val += (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
   } \
-  byteback_sGeneric_m_shift += CHAR_BIT - 1; \
  } \
 } \
 while(0);
