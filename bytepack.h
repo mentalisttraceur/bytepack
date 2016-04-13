@@ -48,11 +48,11 @@ Assumes (violating these could be anything from harmless to catostrophic):
 Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
 Insertable Code (must be actual C code snippets):
- loopBodyEnd_c:
-  Goes at the end of a body of the internal pack loop. Intended for resume
-  support, size/bounds checking, and writing/counting the byteback bytes.
+ consumeByte_c:
+  Code that receives each packed byte. This is where actual writing/counting,
+  size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define bytepack_uGeneric_m(val, loopBodyEnd_c) \
+#define bytepack_uGeneric_m(val, consumeByte_c) \
 do \
 { \
  unsigned char bytepack_uGeneric_m_byte = val; \
@@ -62,7 +62,7 @@ do \
   val -= 1; \
   bytepack_uGeneric_m_byte |= UCHAR_NTH_TOP_BIT_m(1); \
  } \
- loopBodyEnd_c \
+ consumeByte_c \
 } \
 while(val);
 
@@ -79,17 +79,17 @@ Assumes (violating these could be anything from harmless to catostrophic):
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
- loopBodyStart_c:
-  Goes at the start of a body of the internal unpack loop. Intended for resume
-  support, size/bounds checking, and reading/counting the byteback bytes.
+ produceByte_c:
+  Code that provides each packed byte. This is where actual reading/counting,
+  size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define byteback_uGeneric_m(val, T, loopBodyStart_c) \
+#define byteback_uGeneric_m(val, T, produceByte_c) \
 { \
  unsigned char byteback_uGeneric_m_byte; \
  unsigned int byteback_uGeneric_m_shift = 0; \
  while(1) \
  { \
-  loopBodyStart_c \
+  produceByte_c \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
   if(!(UCHAR_NTH_TOP_BIT_m(1) & byteback_uGeneric_m_byte)) \
   { \
@@ -105,11 +105,11 @@ Assumes (violating these could be anything from harmless to catostrophic):
 Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
 Insertable Code (must be actual C code snippets):
- loopBodyEnd_c:
-  Goes at the end of a body of the internal pack loop. Intended for resume
-  support, size/bounds checking, and writing/counting the byteback bytes.
+ consumeByte_c:
+  Code that receives each packed byte. This is where actual writing/counting,
+  size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define bytepack_sGeneric_m(val, loopBodyEnd_c) \
+#define bytepack_sGeneric_m(val, consumeByte_c) \
 { \
  unsigned char bytepack_sGeneric_m_byte; \
  unsigned char bytepack_sGeneric_m_signBit; \
@@ -137,7 +137,7 @@ Insertable Code (must be actual C code snippets):
    val -= 1; \
    bytepack_sGeneric_m_byte |= UCHAR_NTH_TOP_BIT_m(1); \
   } \
-  loopBodyEnd_c \
+  consumeByte_c \
  } \
  while(val); \
 }
@@ -155,17 +155,17 @@ Assumes (violating these could be anything from harmless to catostrophic):
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
- loopBodyStart_c:
-  Goes at the start of a body of the internal unpack loop. Intended for resume
-  support, size/bounds checking, and reading/counting the byteback bytes.
+ produceByte_c:
+  Code that provides each packed byte. This is where actual reading/counting,
+  size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define byteback_sGeneric_m(val, T, loopBodyStart_c) \
+#define byteback_sGeneric_m(val, T, produceByte_c) \
 do \
 { \
  unsigned char byteback_sGeneric_m_byte; \
  unsigned int byteback_sGeneric_m_shift; \
  unsigned char byteback_sGeneric_m_signBit; \
- loopBodyStart_c \
+ produceByte_c \
  { \
   unsigned char byteback_sGeneric_m_firstByte \
   = byteback_sGeneric_m_byte & UCHAR_NOT_N_TOP_BITS_m(2); \
@@ -189,7 +189,7 @@ do \
  while(UCHAR_NTH_TOP_BIT_m(1) & byteback_sGeneric_m_byte) \
  { \
   byteback_sGeneric_m_shift += CHAR_BIT - 1; \
-  loopBodyStart_c \
+  produceByte_c \
   if(byteback_sGeneric_m_signBit) \
   { \
    val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
