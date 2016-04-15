@@ -112,20 +112,17 @@ Insertable Code (must be actual C code snippets):
 #define bytepack_sGeneric_m(val, consumeByte_c) \
 { \
  unsigned char bytepack_sGeneric_m_byte; \
- unsigned char bytepack_sGeneric_m_signBit; \
  if(val < 0) \
  { \
-  bytepack_sGeneric_m_signBit = UCHAR_NTH_TOP_BIT_m(2); \
   val += 1; \
   val = -val; \
+  bytepack_sGeneric_m_byte = val | UCHAR_NTH_TOP_BIT_m(2); \
  } \
  else \
  { \
-  bytepack_sGeneric_m_signBit = 0; \
+  bytepack_sGeneric_m_byte = val; \
  } \
- bytepack_sGeneric_m_byte = val & UCHAR_NOT_N_TOP_BITS_m(2); \
  val >>= CHAR_BIT - 2; \
- bytepack_sGeneric_m_byte |= bytepack_sGeneric_m_signBit; \
  goto bytepack_sGeneric_m_loopSkipReInit; \
  do \
  { \
