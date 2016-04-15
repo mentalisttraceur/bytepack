@@ -120,7 +120,7 @@ Insertable Code (must be actual C code snippets):
  } \
  else \
  { \
-  bytepack_sGeneric_m_byte = val; \
+  bytepack_sGeneric_m_byte = val & UCHAR_NOT_N_TOP_BITS_m(2); \
  } \
  val >>= CHAR_BIT - 2; \
  goto bytepack_sGeneric_m_loopSkipReInit; \
