@@ -23,7 +23,7 @@
 #ifndef BYTEPACK_C_H
 #define BYTEPACK_C_H
 
-#include <limits.h> /* UCHAR_MAX */
+#include <limits.h> /* CHAR_BIT, UCHAR_MAX */
 
 
 /* Declarations and explanations *********************************************/
