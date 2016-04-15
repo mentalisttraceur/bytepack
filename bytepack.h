@@ -75,7 +75,7 @@ Assumes (violating these could be anything from harmless to catostrophic):
  T is an unsigned integral type
  OR T is a signed integral type or a type which is promoted to an integer
   during integer promotion, and the bytepack value is is within the range of
-  values presentable by T
+  values representable by T
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
@@ -148,7 +148,7 @@ Assumes (violating these could be anything from harmless to catostrophic):
  T is an unsigned integral type
  OR T is a signed integral type or a type which is promoted to an integer
   during integer promotion, and the bytepack value is is within the range of
-  values presentable by T
+  values representable by T
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
