@@ -1,5 +1,5 @@
 /*****************************************************************************\
- * Copyright (C) Alexander Kozhevnikov <mentalisttraceur@gmail.com> 2016-04-13
+ * Copyright (C) Alexander Kozhevnikov <mentalisttraceur@gmail.com> 2016-04-15
  * 
  * "bytepack"/"byteback" name idea contributed by Mike Serritella
  *     <author@mikeserritella.com> 2015-09-15
