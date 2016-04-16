@@ -29,14 +29,19 @@
 /* Declarations and explanations *********************************************/
 /* When in doubt, assume this code does not error-check your arguments. */
 
+#define bytepack_CONTINUE_BIT (unsigned char )((UCHAR_MAX >> 1) + 1)
+/*\
+The most significant bit of the unsigned char is the continue bit.
+\*/
+
+#define bytepack_SIGN_BIT (unsigned char )((UCHAR_MAX >> 2) + 1)
+/*\
+The second most significant bit of the unsigned char is the sign bit.
+\*/
+
 #define UCHAR_NOT_N_TOP_BITS_m(n) (unsigned char )(UCHAR_MAX >> (n))
 /*\
 All but the n most significant bits of an unsigned char.
-\*/
-
-#define UCHAR_NTH_TOP_BIT_m(n) (unsigned char )(1 << (CHAR_BIT - (n)))
-/*\
-The nth most significant bit of an unsigned char.
 \*/
 
 /* Macro definitions *********************************************************/
@@ -60,7 +65,7 @@ do \
  if(val) \
  { \
   val -= 1; \
-  bytepack_uGeneric_m_byte |= UCHAR_NTH_TOP_BIT_m(1); \
+  bytepack_uGeneric_m_byte |= bytepack_CONTINUE_BIT; \
  } \
  consumeByte_c \
 } \
@@ -91,7 +96,7 @@ Insertable Code (must be actual C code snippets):
  { \
   produceByte_c \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
-  if(!(UCHAR_NTH_TOP_BIT_m(1) & byteback_uGeneric_m_byte)) \
+  if(!(byteback_uGeneric_m_byte & bytepack_CONTINUE_BIT)) \
   { \
    break; \
   } \
@@ -116,7 +121,7 @@ Insertable Code (must be actual C code snippets):
  { \
   val += 1; \
   val = -val; \
-  bytepack_sGeneric_m_byte = val | UCHAR_NTH_TOP_BIT_m(2); \
+  bytepack_sGeneric_m_byte = val | bytepack_SIGN_BIT; \
  } \
  else \
  { \
@@ -132,7 +137,7 @@ Insertable Code (must be actual C code snippets):
   if(val) \
   { \
    val -= 1; \
-   bytepack_sGeneric_m_byte |= UCHAR_NTH_TOP_BIT_m(1); \
+   bytepack_sGeneric_m_byte |= bytepack_CONTINUE_BIT; \
   } \
   consumeByte_c \
  } \
@@ -166,12 +171,11 @@ do \
  { \
   unsigned char byteback_sGeneric_m_firstByte \
   = byteback_sGeneric_m_byte & UCHAR_NOT_N_TOP_BITS_m(2); \
-  if(UCHAR_NTH_TOP_BIT_m(1) & byteback_sGeneric_m_byte) \
+  if(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT) \
   { \
-   byteback_sGeneric_m_firstByte |= UCHAR_NTH_TOP_BIT_m(2); \
+   byteback_sGeneric_m_firstByte |= bytepack_SIGN_BIT; \
   } \
-  byteback_sGeneric_m_signBit \
-  = byteback_sGeneric_m_byte & UCHAR_NTH_TOP_BIT_m(2); \
+  byteback_sGeneric_m_signBit = byteback_sGeneric_m_byte & bytepack_SIGN_BIT; \
   if(byteback_sGeneric_m_signBit) \
   { \
    val -= 1; \
@@ -183,7 +187,7 @@ do \
   } \
  } \
  byteback_sGeneric_m_shift = -1; \
- while(UCHAR_NTH_TOP_BIT_m(1) & byteback_sGeneric_m_byte) \
+ while(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT) \
  { \
   byteback_sGeneric_m_shift += CHAR_BIT - 1; \
   produceByte_c \
