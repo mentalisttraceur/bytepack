@@ -39,9 +39,9 @@ The most significant bit of the unsigned char is the continue bit.
 The second most significant bit of the unsigned char is the sign bit.
 \*/
 
-#define UCHAR_NOT_N_TOP_BITS_m(n) (unsigned char )(UCHAR_MAX >> (n))
+#define bytepack_NOT_CONTINUE_SIGN_BITS (unsigned char )(UCHAR_MAX >> 2)
 /*\
-All but the n most significant bits of an unsigned char.
+All but the continue and sign bits of an unsigned char.
 \*/
 
 /* Macro definitions *********************************************************/
@@ -125,7 +125,7 @@ Insertable Code (must be actual C code snippets):
  } \
  else \
  { \
-  bytepack_sGeneric_m_byte = val & UCHAR_NOT_N_TOP_BITS_m(2); \
+  bytepack_sGeneric_m_byte = val & bytepack_NOT_CONTINUE_SIGN_BITS; \
  } \
  val >>= CHAR_BIT - 2; \
  goto bytepack_sGeneric_m_loopSkipReInit; \
@@ -170,7 +170,7 @@ do \
  produceByte_c \
  { \
   unsigned char byteback_sGeneric_m_firstByte \
-  = byteback_sGeneric_m_byte & UCHAR_NOT_N_TOP_BITS_m(2); \
+  = byteback_sGeneric_m_byte & bytepack_NOT_CONTINUE_SIGN_BITS; \
   if(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT) \
   { \
    byteback_sGeneric_m_firstByte |= bytepack_SIGN_BIT; \
