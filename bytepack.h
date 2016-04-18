@@ -119,13 +119,16 @@ Insertable Code (must be actual C code snippets):
  unsigned char bytepack_sGeneric_m_byte; \
  if(val < 0) \
  { \
-  bytepack_sGeneric_m_byte = val; \
-  bytepack_sGeneric_m_byte = -bytepack_sGeneric_m_byte; \
-  bytepack_sGeneric_m_byte |= bytepack_SIGN_BIT; \
-  val += bytepack_SIGN_BIT; \
-  val = -val; \
-  val >>= CHAR_BIT - 2; \
   val += 1; \
+  val = -val; \
+  bytepack_sGeneric_m_byte = val | bytepack_SIGN_BIT; \
+  val >>= CHAR_BIT - 2; \
+  bytepack_sGeneric_m_byte += 1; \
+  if(!(bytepack_sGeneric_m_byte & bytepack_SIGN_BIT)) \
+  { \
+   bytepack_sGeneric_m_byte |= bytepack_SIGN_BIT; \
+   val += 1; \
+  } \
  } \
  else \
  { \
