@@ -122,12 +122,19 @@ Insertable Code (must be actual C code snippets):
   val += 1; \
   val = -val; \
   bytepack_sGeneric_m_byte = val | bytepack_SIGN_BIT; \
+  val >>= CHAR_BIT - 2; \
+  bytepack_sGeneric_m_byte += 1; \
+  if(!(bytepack_sGeneric_m_byte & bytepack_SIGN_BIT)) \
+  { \
+   bytepack_sGeneric_m_byte |= bytepack_SIGN_BIT; \
+   val += 1; \
+  } \
  } \
  else \
  { \
   bytepack_sGeneric_m_byte = val & bytepack_NOT_CONTINUE_SIGN_BITS; \
+  val >>= CHAR_BIT - 2; \
  } \
- val >>= CHAR_BIT - 2; \
  goto bytepack_sGeneric_m_loopSkipReInit; \
  do \
  { \
@@ -178,7 +185,6 @@ do \
   byteback_sGeneric_m_signBit = byteback_sGeneric_m_byte & bytepack_SIGN_BIT; \
   if(byteback_sGeneric_m_signBit) \
   { \
-   val -= 1; \
    val -= byteback_sGeneric_m_firstByte; \
   } \
   else \
