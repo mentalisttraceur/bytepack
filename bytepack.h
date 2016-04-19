@@ -154,10 +154,10 @@ Assumes (violating these could be anything from harmless to catostrophic):
  OR typeof(val) is a signed integral type and the bytepack value (or the
   largest or smallest value representable by T, whichever has smallest
   magnitude) is within the range of values representable by typeof(val)
- T is an unsigned integral type
+ T is an unsigned integral type, and the val value is representable by T
  OR T is a signed integral type or a type which is promoted to an integer
-  during integer promotion, and the bytepack value is is within the range of
-  values representable by T
+  during integer promotion, the bytepack value and the val value are within
+  the range of values representable by T
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
@@ -166,44 +166,40 @@ Insertable Code (must be actual C code snippets):
   size/bounds checking, resume support, etc, is actually implemented.
 \*/
 #define byteback_sGeneric_m(val, T, produceByte_c) \
-do \
 { \
- unsigned char byteback_sGeneric_m_byte; \
- unsigned int byteback_sGeneric_m_shift; \
+ T byteback_sGeneric_m_val = val; \
  unsigned char byteback_sGeneric_m_signBit; \
- produceByte_c \
+ do \
  { \
-  unsigned char byteback_sGeneric_m_firstByte \
-  = byteback_sGeneric_m_byte & bytepack_NOT_CONTINUE_SIGN_BITS; \
-  if(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT) \
-  { \
-   byteback_sGeneric_m_firstByte |= bytepack_SIGN_BIT; \
-  } \
-  byteback_sGeneric_m_signBit = byteback_sGeneric_m_byte & bytepack_SIGN_BIT; \
-  if(byteback_sGeneric_m_signBit) \
-  { \
-   val -= byteback_sGeneric_m_firstByte; \
-  } \
-  else \
-  { \
-   val += byteback_sGeneric_m_firstByte; \
-  } \
- } \
- byteback_sGeneric_m_shift = -1; \
- while(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT) \
- { \
-  byteback_sGeneric_m_shift += CHAR_BIT - 1; \
+  unsigned char byteback_sGeneric_m_byte; \
+  unsigned int byteback_sGeneric_m_shift; \
   produceByte_c \
-  if(byteback_sGeneric_m_signBit) \
+  byteback_sGeneric_m_signBit = byteback_sGeneric_m_byte & bytepack_SIGN_BIT; \
+  byteback_sGeneric_m_byte ^= byteback_sGeneric_m_signBit; \
+  val = -byteback_sGeneric_m_byte; \
+  if(!(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT)) \
   { \
-   val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
+   break; \
   } \
-  else \
+  val += bytepack_SIGN_BIT; \
+  byteback_sGeneric_m_shift = CHAR_BIT - 2; \
+  while(1) \
   { \
-   val += (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
+   produceByte_c \
+   val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
+   if(!(byteback_sGeneric_m_byte & bytepack_CONTINUE_BIT)) \
+   { \
+    break; \
+   } \
+   byteback_sGeneric_m_shift += CHAR_BIT - 1; \
   } \
  } \
-} \
-while(0);
+ while(0); \
+ if(!byteback_sGeneric_m_signBit) \
+ { \
+  val = -val; \
+ } \
+ val += byteback_sGeneric_m_val; \
+}
 
 #endif /* BYTEPACK_C_H */
