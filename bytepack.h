@@ -88,7 +88,7 @@ Insertable Code (must be actual C code snippets):
 { \
  unsigned char byteback_uGeneric_m_byte; \
  unsigned int byteback_uGeneric_m_shift = 0; \
- while(1) \
+ for(;;) \
  { \
   produceByte_c \
   val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
@@ -179,7 +179,7 @@ Insertable Code (must be actual C code snippets):
   } \
   val += bytepack_SIGN_BIT; \
   byteback_sGeneric_m_shift = CHAR_BIT - 2; \
-  while(1) \
+  for(;;) \
   { \
    produceByte_c \
    val -= (T )byteback_sGeneric_m_byte << byteback_sGeneric_m_shift; \
