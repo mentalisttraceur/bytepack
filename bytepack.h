@@ -19,23 +19,23 @@
 #ifndef BYTEPACK_C_H
 #define BYTEPACK_C_H
 
-#include <limits.h> /* CHAR_BIT, UCHAR_MAX */
+#include <limits.h> /* CHAR_BIT */
 
 
 /* Declarations and explanations *********************************************/
 /* When in doubt, assume this code does not error-check your arguments. */
 
-#define bytepack_CONTINUE_BIT (unsigned char )((UCHAR_MAX >> 1) + 1)
+#define bytepack_CONTINUE_BIT ((unsigned int )1 << (CHAR_BIT - 1))
 /*\
 The most significant bit of the unsigned char is the continue bit.
 \*/
 
-#define bytepack_SIGN_BIT (unsigned char )((UCHAR_MAX >> 2) + 1)
+#define bytepack_SIGN_BIT ((unsigned int )1 << (CHAR_BIT - 2))
 /*\
 The second most significant bit of the unsigned char is the sign bit.
 \*/
 
-#define bytepack_NOT_CONTINUE_SIGN_BITS (unsigned char )(UCHAR_MAX >> 2)
+#define bytepack_NOT_CONTINUE_SIGN_BITS (bytepack_SIGN_BIT - 1)
 /*\
 All but the continue and sign bits of an unsigned char.
 \*/
