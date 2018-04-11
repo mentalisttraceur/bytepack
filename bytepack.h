@@ -54,7 +54,7 @@ Insertable Code (must be actual C code snippets):
   size/bounds checking, resume support, etc, is actually implemented.
 \*/
 #define bytepack_uGeneric_m(val, consumeByte_c) \
-do \
+for(;;) \
 { \
  unsigned char bytepack_uGeneric_m_byte = val; \
  val >>= CHAR_BIT - 1; \
@@ -64,8 +64,11 @@ do \
   bytepack_uGeneric_m_byte |= bytepack_CONTINUE_BIT; \
  } \
  consumeByte_c \
-} \
-while(val);
+ if(!(bytepack_uGeneric_m_byte & bytepack_CONTINUE_BIT)) \
+ { \
+  break; \
+ } \
+}
 
 /*\
 Assumes (violating these could be anything from harmless to catostrophic):
