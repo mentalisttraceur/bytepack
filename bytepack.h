@@ -73,13 +73,8 @@ for(;;) \
 /*\
 Assumes (violating these could be anything from harmless to catostrophic):
  typeof(val) is an unsigned integral type
- OR typeof(val) is a signed integral type and the bytepack value (or the
-  largest or smallest value representable by T, whichever has smallest
-  magnitude) is within the range of values representable by typeof(val)
- T is an unsigned integral type
- OR T is a signed integral type or a type which is promoted to an integer
-  during integer promotion, and the bytepack value is is within the range of
-  values representable by T
+ OR typeof(val) is a signed integral type and the bytepack value is within the
+  range of values representable by typeof(val)
 Sets (these are the "return values" of this macro):
  val: The value of the bytepack
 Insertable Code (must be actual C code snippets):
