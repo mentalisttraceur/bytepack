@@ -87,14 +87,15 @@ Insertable Code (must be actual C code snippets):
   Code that provides each packed byte. This is where actual reading/counting,
   size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define byteback_uGeneric_m(val, T, produceByte_c) \
+#define byteback_uGeneric_m(val, produceByte_c) \
 { \
  unsigned char byteback_uGeneric_m_byte; \
  unsigned int byteback_uGeneric_m_shift = 0; \
  for(;;) \
  { \
   produceByte_c \
-  val += (T )byteback_uGeneric_m_byte << byteback_uGeneric_m_shift; \
+  val += ((val & (unsigned int )0) | byteback_uGeneric_m_byte) \
+      << byteback_uGeneric_m_shift; \
   if(!(byteback_uGeneric_m_byte & bytepack_CONTINUE_BIT)) \
   { \
    break; \
