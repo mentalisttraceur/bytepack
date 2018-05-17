@@ -49,22 +49,22 @@ Assumes (violating these could be anything from harmless to catostrophic):
 Mangles (these values are altered by this macro):
  val: approaches to 0 with each iteration.
 Insertable Code (must be actual C code snippets):
- consumeByte_c:
+ consume_byte_c:
   Code that receives each packed byte. This is where actual writing/counting,
   size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define bytepack_uGeneric_m(val, consumeByte_c) \
+#define bytepack_m(val, consume_byte_c) \
 for(;;) \
 { \
- unsigned char bytepack_uGeneric_m_byte = val; \
+ unsigned char bytepack_m_byte = val; \
  val >>= CHAR_BIT - 1; \
  if(val) \
  { \
   val -= 1; \
-  bytepack_uGeneric_m_byte |= bytepack_CONTINUE_BIT; \
+  bytepack_m_byte |= bytepack_CONTINUE_BIT; \
  } \
- consumeByte_c \
- if(!(bytepack_uGeneric_m_byte & bytepack_CONTINUE_BIT)) \
+ consume_byte_c \
+ if(!(bytepack_m_byte & bytepack_CONTINUE_BIT)) \
  { \
   break; \
  } \
@@ -82,20 +82,19 @@ Insertable Code (must be actual C code snippets):
   Code that provides each packed byte. This is where actual reading/counting,
   size/bounds checking, resume support, etc, is actually implemented.
 \*/
-#define byteback_uGeneric_m(val, produceByte_c) \
+#define byteback_m(val, produce_byte_c) \
 { \
- unsigned char byteback_uGeneric_m_byte; \
- unsigned int byteback_uGeneric_m_shift = 0; \
+ unsigned char byteback_m_byte; \
+ unsigned int byteback_m_shift = 0; \
  for(;;) \
  { \
-  produceByte_c \
-  val += ((val & (unsigned int )0) | byteback_uGeneric_m_byte) \
-      << byteback_uGeneric_m_shift; \
-  if(!(byteback_uGeneric_m_byte & bytepack_CONTINUE_BIT)) \
+  produce_byte_c \
+  val += ((val & (unsigned int )0) | byteback_m_byte) << byteback_m_shift; \
+  if(!(byteback_m_byte & bytepack_CONTINUE_BIT)) \
   { \
    break; \
   } \
-  byteback_uGeneric_m_shift += CHAR_BIT - 1; \
+  byteback_m_shift += CHAR_BIT - 1; \
  } \
 }
 
