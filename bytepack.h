@@ -196,4 +196,29 @@ Insertable Code (must be actual C code snippets):
  val += byteback_sGeneric_m_val; \
 }
 
+#define bytepack_zigzag_m(sval, uval) \
+{ \
+ if(sval < 0) \
+ { \
+  uval = -(sval + 1); \
+  uval <<= 1; \
+  uval += 1; \
+ } \
+ else \
+ { \
+  uval = sval; \
+  uval <<= 1; \
+ } \
+}
+
+#define byteback_zigzag_m(uval, sval) \
+{ \
+ sval = uval >> 1; \
+ if(uval & 1) \
+ { \
+  sval = -sval; \
+  sval -= 1; \
+ } \
+}
+
 #endif /* BYTEPACK_C_H */
