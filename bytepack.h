@@ -1,9 +1,6 @@
 /*****************************************************************************\
  * Copyright (C) Alexander Kozhevnikov <mentalisttraceur@gmail.com> 2015, 2016
  * 
- * "bytepack"/"byteback" name idea contributed by Mike Serritella
- *     <author@mikeserritella.com> 2015-09-15
- * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted.
  * 
