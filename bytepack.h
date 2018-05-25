@@ -210,7 +210,8 @@ Insertable Code (must be actual C code snippets):
 }
 
 #define bytepack_zigzag_m(T, val) \
-((val < 0) ? ~((T )val << 1) : ((T )val << 1))
+((val < 0) ? ~(unsigned_integer_promotion((T )val) << 1) \
+           :  (unsigned_integer_promotion((T )val) << 1))
 
 #define byteback_zigzag_m(T, val) \
 ((val & 1) ? (-1 - (T )(val >> 1)) : (T )(val >> 1))
