@@ -37,6 +37,20 @@ The second most significant bit of the unsigned char is the sign bit.
 All but the continue and sign bits of an unsigned char.
 \*/
 
+#define unsigned_integer_promotion(val) ((val) + (unsigned int )0)
+/*\
+Forces integer promotion on val towards unsigned int instead of signed int,
+without casting val down to unsigned int if it's a wider type.
+C compilers historically easily optimize out no-effect operations like this.
+\*/
+
+#define usual_arithmetic_conversions_with_type_of(expression, val) \
+(((expression) * 0) + (val))
+/*\
+Change the effective type of val by causing the usual arithmetic conversions to
+be performed on val and expression while retaining the value of val.
+C compilers historically easily optimize out no-effect operations like this.
+\*/
 /* Macro definitions *********************************************************/
 
 /*\
@@ -86,7 +100,9 @@ Insertable Code (must be actual C code snippets):
  for(;;) \
  { \
   produce_byte_c \
-  val += ((val & (unsigned int )0) | byteback_m_byte) << byteback_m_shift; \
+  val += usual_arithmetic_conversions_with_type_of(val, \
+          unsigned_integer_promotion(byteback_m_byte)) \
+      << byteback_m_shift; \
   if(!(byteback_m_byte & bytepack_CONTINUE_BIT)) \
   { \
    break; \
